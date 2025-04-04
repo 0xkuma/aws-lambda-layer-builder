@@ -1,16 +1,18 @@
-FROM python:slim
+FROM python:3.13-slim
 
-# 更新 apt 並安裝 zip 工具
-RUN apt-get update && apt-get install -y zip && rm -rf /var/lib/apt/lists/*
+# Update apt and install zip with minimal extra packages
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends zip && \
+  rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# 複製部署腳本至容器
-COPY deploy_layer.sh /app/deploy_layer.sh
-RUN chmod +x /app/deploy_layer.sh
+# Copy the deployment script and set execute permissions
+COPY deploy_layer.sh /app/
+RUN chmod +x deploy_layer.sh
 
-# 安裝 AWS CLI（利用 pip）
-RUN pip install awscli
+# Install AWS CLI without caching installation files
+RUN pip install --no-cache-dir awscli
 
-# 設定容器啟動後執行部署腳本
-ENTRYPOINT ["sh", "/app/deploy_layer.sh"]
+# Set the container to run the deployment script upon start
+ENTRYPOINT ["sh", "deploy_layer.sh"]
