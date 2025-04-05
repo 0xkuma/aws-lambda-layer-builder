@@ -102,13 +102,16 @@ docker build -t lambda-layer-deployer .
 
 #### Running the Docker Container
 
-To deploy a Lambda Layer, run the Docker container in interactive mode:
+To deploy a Lambda Layer, run the Docker container in interactive mode with your AWS credentials mounted:
 
 ```sh
-docker run -it --rm lambda-layer-deployer
+docker run -it \
+ -e AWS_PROFILE=<your-aws-profile> \
+ -v <path-to-your-aws-config>:/root/.aws \
+ lambda-layer-deployer
 ```
 
-This command will start the container and prompt you for the required information interactively.
+Replace `<your-aws-profile>` with your actual AWS CLI profile name and `<path-to-your-aws-config>` with the directory path where your AWS configuration files are stored.
 
 ## Additional Notes
 
